@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AirTag ibon 4x6 貼紙繪圖與排版模板工具</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .canvas-container {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden text-slate-800">
+
+    <!-- 頂部導覽列 -->
+    <header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between z-10">
+        <div class="flex items-center space-x-3">
+            <div class="bg-red-500 text-white p-2 rounded-lg font-bold flex items-center justify-center w-9 h-9">
+                Wie
+            </div>
+            <div>
+                <h1 class="font-bold text-lg leading-tight text-slate-800">AirTag ibon 4x6 貼紙繪圖排版模板</h1>
+                <p class="text-xs text-slate-500">標準 AirTag 直徑 31.9mm 採用 25mm 以取平面貼合| 4x6吋 (300 DPI 高解析度)</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-3">
+            <button id="openGuideBtn" class="px-3 py-1.5 text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition flex items-center gap-1.5 font-medium">
+                <i class="fa-solid fa-circle-question text-slate-500"></i> ibon 列印教學
+            </button>
+            <button id="exportBtn" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg shadow-sm transition flex items-center gap-2">
+                <i class="fa-solid fa-download"></i> 下載 ibon 高解析列印圖
+            </button>
+        </div>
+    </header>
+
+    <!-- 主要工作區域 -->
+    <div class="flex-1 flex overflow-hidden">
+
+        <!-- 左側控制面板 -->
+        <aside class="w-80 bg-white border-r border-slate-200 flex flex-col h-full overflow-y-auto">
+            
+            <!-- 版型與排版設定 -->
+            <div class="p-4 border-b border-slate-100">
+                <h2 class="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-border-all text-red-500"></i> 排版與規格設定
+                </h2>
+                
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-xs font-medium text-slate-600 block mb-1">貼紙數量 / 佈局 (4x6 相片紙)</label>
+                        <select id="layoutSelect" class="w-full text-sm border border-slate-300 rounded-lg p-2 bg-slate-50 focus:ring-2 focus:ring-red-500 focus:outline-none">
+                            <option value="12">12 個 ( 3 x 4 排列 - 推薦 )</option>
+                            <option value="8">8 個 ( 2 x 4 排列 - 大間距 )</option>
+                            <option value="6">6 個 ( 2 x 3 排列 - 極寬鬆 )</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-medium text-slate-600 block mb-1">剪裁虛線輔助線</label>
+                        <div class="flex items-center justify-between bg-slate-50 p-2 rounded-lg border border-slate-200">
+                            <span class="text-xs text-slate-700">顯示 AirTag 實體邊界虛線</span>
+                            <input type="checkbox" id="showCutLineCheck" checked class="w-4 h-4 text-red-600 rounded focus:ring-red-500 cursor-pointer">
+                        </div>
+                        <p class="text-[11px] text-slate-400 mt-1">※ 虛線圓圈為 25mm (AirTag 尺寸31.9mm)，方便印出後用剪刀沿線剪下。</p>
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-medium text-slate-600 block mb-1">虛線顏色</label>
+                        <input type="color" id="cutLineColor" value="#94a3b8" class="w-full h-8 rounded border border-slate-300 cursor-pointer bg-white">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 當前選取圓圈編輯器 -->
+            <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex-1">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                        <i class="fa-solid fa-pen-ruler text-red-500"></i> 編輯選取圖案
+                    </h2>
+                    <span id="selectedBadge" class="text-xs font-semibold bg-red-100 text-red-700 px-2 py-0.5 rounded-full">貼紙 #1</span>
+                </div>
+
+                <!-- 編輯工具列卡片 -->
+                <div class="space-y-4">
+                    <!-- 上傳圖片 -->
+                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                        <label class="text-xs font-semibold text-slate-700 block mb-2"><i class="fa-solid fa-image text-blue-500 mr-1"></i> 插入圖檔/照片</label>
+                        <input type="file" id="imageInput" accept="image/*" class="hidden">
+                        <div class="flex gap-2">
+                            <button onclick="document.getElementById('imageInput').click()" class="flex-1 py-2 bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-medium rounded-lg border border-blue-200 transition flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-upload"></i> 上傳圖片
+                            </button>
+                            <button id="removeImgBtn" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs rounded-lg transition" title="移除圖片">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 圓形背景顏色 -->
+                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                        <label class="text-xs font-semibold text-slate-700 block mb-2"><i class="fa-solid fa-palette text-amber-500 mr-1"></i> 背景顏色</label>
+                        <div class="flex items-center gap-2">
+                            <input type="color" id="bgColorInput" value="#ffffff" class="w-10 h-9 rounded border border-slate-300 cursor-pointer bg-white">
+                            <button id="bgTransparentBtn" class="flex-1 py-1.5 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition border border-slate-200">
+                                設為純白
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 文字設定 -->
+                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm space-y-2">
+                        <label class="text-xs font-semibold text-slate-700 block"><i class="fa-solid fa-font text-purple-500 mr-1"></i> 加入文字 (電話/名字)</label>
+                        <input type="text" id="textInput" placeholder="輸入文字 (例如: 0912-345678)" class="w-full text-xs border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                        
+                        <div class="grid grid-cols-2 gap-2 pt-1">
+                            <div>
+                                <label class="text-[11px] text-slate-500 block">文字顏色</label>
+                                <input type="color" id="textColorInput" value="#000000" class="w-full h-7 rounded border border-slate-300 cursor-pointer bg-white">
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-500 block">字型大小</label>
+                                <input type="range" id="textSizeInput" min="12" max="60" value="28" class="w-full">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 畫筆繪圖繪製 -->
+                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm space-y-2">
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-semibold text-slate-700"><i class="fa-solid fa-paintbrush text-emerald-500 mr-1"></i> 手繪塗鴉模式</label>
+                            <input type="checkbox" id="drawModeCheck" class="w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500 cursor-pointer">
+                        </div>
+                        <div id="drawTools" class="space-y-2 pt-1 opacity-50 pointer-events-none transition-opacity">
+                            <div class="flex items-center gap-2">
+                                <input type="color" id="brushColor" value="#ef4444" class="w-8 h-8 rounded border border-slate-300 cursor-pointer bg-white">
+                                <input type="range" id="brushSize" min="2" max="30" value="6" class="flex-1">
+                                <span id="brushSizeLabel" class="text-xs text-slate-500 w-6">6px</span>
+                            </div>
+                            <button id="clearDrawBtn" class="w-full py-1 text-xs bg-red-50 hover:bg-red-100 text-red-600 rounded border border-red-200 transition">
+                                <i class="fa-solid fa-eraser mr-1"></i> 清除此貼紙的筆劃
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 快速同步至全部 -->
+                    <button id="applyAllBtn" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-medium rounded-xl shadow-sm transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-copy"></i> 套用當前樣式至「所有貼紙」
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 中央畫布檢視區 -->
+        <main class="flex-1 bg-slate-200/80 p-6 flex flex-col items-center justify-center relative overflow-auto">
+            
+            <!-- Canvas 容器 (模擬 4x6 比例: 1200x1800 縮放顯示) -->
+            <div class="relative canvas-container bg-white rounded-lg overflow-hidden border border-slate-300 flex items-center justify-center">
+                <canvas id="previewCanvas" class="cursor-pointer block"></canvas>
+            </div>
+
+            <!-- 底部分頁說明條 -->
+            <div class="mt-4 bg-white/90 backdrop-blur px-4 py-2 rounded-full border border-slate-300/80 shadow-sm text-xs text-slate-600 flex items-center gap-4">
+                <span><i class="fa-solid fa-mouse-pointer text-red-500 mr-1"></i> 點擊畫布上的圓圈即可切換選取</span>
+                <span class="text-slate-300">|</span>
+                <span><i class="fa-solid fa-print text-blue-500 mr-1"></i> 7-11 ibon 貼紙紙張規格: 4x6 吋 (10.16 x 15.24 cm)</span>
+            </div>
+        </main>
+    </div>
+
+    <!-- ibon 列印說明 Modal -->
+    <div id="guideModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative animate-fadeIn">
+            <button id="closeGuideBtn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-print text-red-500"></i> 7-11 ibon 列印 AirTag 貼紙步驟
+            </h3>
+            
+            <ol class="space-y-3 text-sm text-slate-600 border-l-2 border-red-100 pl-4 ml-2">
+                <li class="relative">
+                    <span class="absolute -left-[21px] top-0 w-3 h-3 rounded-full bg-red-500 border-2 border-white"></span>
+                    <strong class="text-slate-800 block mb-0.5">1. 下載高解析圖檔</strong>
+                    點擊右上角「下載 ibon 高解析列印圖」，儲存 PNG 圖檔至手機或電腦。
+                </li>
+                <li class="relative">
+                    <span class="absolute -left-[21px] top-0 w-3 h-3 rounded-full bg-red-500 border-2 border-white"></span>
+                    <strong class="text-slate-800 block mb-0.5">2. 上傳至 ibon</strong>
+                    開啟 7-11 ibon App / Line 官方帳號 / 雲端列印網頁，上傳該張圖檔。
+                </li>
+                <li class="relative">
+                    <span class="absolute -left-[21px] top-0 w-3 h-3 rounded-full bg-red-500 border-2 border-white"></span>
+                    <strong class="text-slate-800 block mb-0.5">3. 至 7-11 機台選擇列印</strong>
+                    在 ibon 機台點選：<br>
+                    <span class="inline-block bg-slate-100 text-red-600 font-semibold px-2 py-1 rounded my-1">【列印/掃描】➔【4x6 相片/貼紙列印】➔【貼紙】</span>
+                </li>
+                <li class="relative">
+                    <span class="absolute -left-[21px] top-0 w-3 h-3 rounded-full bg-red-500 border-2 border-white"></span>
+                    <strong class="text-slate-800 block mb-0.5">4. 取單繳費與列印</strong>
+                    列印費用為 NT$ 20 / 張。印出後直接使用剪刀或圓形裁切器沿著圓圈虛線剪下，即可完美貼在 AirTag 上！
+                </li>
+            </ol>
+
+            <div class="mt-6 pt-4 border-t border-slate-100 flex justify-end">
+                <button id="modalOkBtn" class="px-5 py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded-xl text-sm transition">
+                    我知道了
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 常數設定 (300 DPI 下的 4x6 吋畫布尺寸)
+        const CANVAS_WIDTH = 1200;  // 4 inches * 300 DPI
+        const CANVAS_HEIGHT = 1800; // 6 inches * 300 DPI
+        const AIRTAG_DIAMETER_MM = 25; // AirTag 標準直徑 31.9
+        const MM_TO_PX = 300 / 25.4;     // 1mm 在 300DPI 下的像素值 (~11.81px)
+        const AIRTAG_RADIUS_PX = (AIRTAG_DIAMETER_MM * MM_TO_PX) / 2; // ~188.4px (直徑約 376.8px)
+
+        // 畫面與 Canvas 元素
+        const mainCanvas = document.getElementById('previewCanvas');
+        const ctx = mainCanvas.getContext('2d');
+        
+        // 設定 Canvas 實體尺寸為高解析度
+        mainCanvas.width = CANVAS_WIDTH;
+        mainCanvas.height = CANVAS_HEIGHT;
+
+        // 計算適應螢幕顯示的 CSS 縮放比例
+        function updateCanvasDisplaySize() {
+            const containerHeight = window.innerHeight - 140;
+            const displayHeight = Math.min(containerHeight, 750);
+            const displayWidth = displayHeight * (4 / 6);
+            
+            mainCanvas.style.width = `${displayWidth}px`;
+            mainCanvas.style.height = `${displayHeight}px`;
+        }
+        window.addEventListener('resize', updateCanvasDisplaySize);
+        updateCanvasDisplaySize();
+
+        // 狀態管理
+        let totalSlots = 12; // 預設 12 個
+        let selectedIndex = 0;
+        let showCutLine = true;
+        let cutLineColor = '#94a3b8';
+        let isDrawing = false;
+
+        // 個別圓圈貼紙資料結構
+        let slotsData = [];
+
+        function initSlotsData(count) {
+            slotsData = [];
+            for (let i = 0; i < count; i++) {
+                // 為每個圓圈創建獨立的繪圖 Canvas
+                const drawCanvas = document.createElement('canvas');
+                const diameter = Math.round(AIRTAG_RADIUS_PX * 2);
+                drawCanvas.width = diameter;
+                drawCanvas.height = diameter;
+
+                slotsData.push({
+                    id: i,
+                    bgColor: '#ffffff',
+                    image: null,
+                    text: '',
+                    textColor: '#000000',
+                    textSize: 28,
+                    drawCanvas: drawCanvas,
+                    drawCtx: drawCanvas.getContext('2d')
+                });
+            }
+            if (selectedIndex >= count) selectedIndex = 0;
+            updateUIForSelectedSlot();
+            renderMasterCanvas();
+        }
+
+        // 計算圓圈貼紙在 4x6 畫布上的座標陣列
+        function getSlotPositions() {
+            const positions = [];
+            let cols = 3;
+            let rows = 4;
+
+            if (totalSlots === 8) {
+                cols = 2; rows = 4;
+            } else if (totalSlots === 6) {
+                cols = 2; rows = 3;
+            }
+
+            const colGap = (CANVAS_WIDTH - (cols * AIRTAG_RADIUS_PX * 2)) / (cols + 1);
+            const rowGap = (CANVAS_HEIGHT - (rows * AIRTAG_RADIUS_PX * 2)) / (rows + 1);
+
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    const cx = colGap + AIRTAG_RADIUS_PX + c * (AIRTAG_RADIUS_PX * 2 + colGap);
+                    const cy = rowGap + AIRTAG_RADIUS_PX + r * (AIRTAG_RADIUS_PX * 2 + rowGap);
+                    positions.push({ x: cx, y: cy });
+                }
+            }
+            return positions;
+        }
+
+        // 渲染完整 4x6 貼紙畫布
+        function renderMasterCanvas() {
+            // 清空主畫布 (純白底)
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+            const positions = getSlotPositions();
+
+            positions.forEach((pos, idx) => {
+                const slot = slotsData[idx];
+                if (!slot) return;
+
+                ctx.save();
+                ctx.translate(pos.x, pos.y);
+
+                // 建立 AirTag 圓形裁切區域
+                ctx.beginPath();
+                ctx.arc(0, 0, AIRTAG_RADIUS_PX, 0, Math.PI * 2);
+                ctx.clip();
+
+                // 1. 繪製背景色
+                ctx.fillStyle = slot.bgColor;
+                ctx.fillRect(-AIRTAG_RADIUS_PX, -AIRTAG_RADIUS_PX, AIRTAG_RADIUS_PX * 2, AIRTAG_RADIUS_PX * 2);
+
+                // 2. 繪製上傳圖片
+                if (slot.image) {
+                    const img = slot.image;
+                    const diameter = AIRTAG_RADIUS_PX * 2;
+                    // 正方形等比 Cover 縮放
+                    const scale = Math.max(diameter / img.width, diameter / img.height);
+                    const w = img.width * scale;
+                    const h = img.height * scale;
+                    ctx.drawImage(img, -w / 2, -h / 2, w, h);
+                }
+
+                // 3. 繪製手繪塗鴉層
+                ctx.drawImage(slot.drawCanvas, -AIRTAG_RADIUS_PX, -AIRTAG_RADIUS_PX);
+
+                // 4. 繪製文字
+                if (slot.text) {
+                    ctx.fillStyle = slot.textColor;
+                    ctx.font = `bold ${slot.textSize * (MM_TO_PX / 8)}px "Noto Sans TC", sans-serif`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(slot.text, 0, 0);
+                }
+
+                ctx.restore();
+
+                // 5. 繪製裁切虛線 (外框)
+                if (showCutLine) {
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(pos.x, pos.y, AIRTAG_RADIUS_PX, 0, Math.PI * 2);
+                    ctx.setLineDash([12, 8]);
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = cutLineColor;
+                    ctx.stroke();
+                    ctx.restore();
+                }
+
+                // 6. 標示當前選中的亮高顯示框
+                if (idx === selectedIndex) {
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(pos.x, pos.y, AIRTAG_RADIUS_PX + 8, 0, Math.PI * 2);
+                    ctx.setLineDash([]);
+                    ctx.lineWidth = 6;
+                    ctx.strokeStyle = '#ef4444'; // Highlight Red
+                    ctx.stroke();
+
+                    // 繪製編號
+                    ctx.fillStyle = '#ef4444';
+                    ctx.beginPath();
+                    ctx.arc(pos.x, pos.y - AIRTAG_RADIUS_PX - 20, 24, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 22px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(idx + 1, pos.x, pos.y - AIRTAG_RADIUS_PX - 20);
+
+                    ctx.restore();
+                }
+            });
+        }
+
+        // 更新控制面板介面
+        function updateUIForSelectedSlot() {
+            const slot = slotsData[selectedIndex];
+            document.getElementById('selectedBadge').innerText = `貼紙 #${selectedIndex + 1}`;
+            document.getElementById('bgColorInput').value = slot.bgColor;
+            document.getElementById('textInput').value = slot.text;
+            document.getElementById('textColorInput').value = slot.textColor;
+            document.getElementById('textSizeInput').value = slot.textSize;
+        }
+
+        // 控制面板事件綁定
+        document.getElementById('layoutSelect').addEventListener('change', (e) => {
+            totalSlots = parseInt(e.target.value);
+            initSlotsData(totalSlots);
+        });
+
+        document.getElementById('showCutLineCheck').addEventListener('change', (e) => {
+            showCutLine = e.target.checked;
+            renderMasterCanvas();
+        });
+
+        document.getElementById('cutLineColor').addEventListener('input', (e) => {
+            cutLineColor = e.target.value;
+            renderMasterCanvas();
+        });
+
+        // 圖片上傳處理
+        document.getElementById('imageInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    slotsData[selectedIndex].image = img;
+                    renderMasterCanvas();
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('removeImgBtn').addEventListener('click', () => {
+            slotsData[selectedIndex].image = null;
+            document.getElementById('imageInput').value = '';
+            renderMasterCanvas();
+        });
+
+        // 背景色設定
+        document.getElementById('bgColorInput').addEventListener('input', (e) => {
+            slotsData[selectedIndex].bgColor = e.target.value;
+            renderMasterCanvas();
+        });
+
+        document.getElementById('bgTransparentBtn').addEventListener('click', () => {
+            slotsData[selectedIndex].bgColor = '#ffffff';
+            document.getElementById('bgColorInput').value = '#ffffff';
+            renderMasterCanvas();
+        });
+
+        // 文字設定
+        document.getElementById('textInput').addEventListener('input', (e) => {
+            slotsData[selectedIndex].text = e.target.value;
+            renderMasterCanvas();
+        });
+
+        document.getElementById('textColorInput').addEventListener('input', (e) => {
+            slotsData[selectedIndex].textColor = e.target.value;
+            renderMasterCanvas();
+        });
+
+        document.getElementById('textSizeInput').addEventListener('input', (e) => {
+            slotsData[selectedIndex].textSize = parseInt(e.target.value);
+            renderMasterCanvas();
+        });
+
+        // 手繪模式開關
+        const drawModeCheck = document.getElementById('drawModeCheck');
+        const drawTools = document.getElementById('drawTools');
+        
+        drawModeCheck.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                drawTools.classList.remove('opacity-50', 'pointer-events-none');
+            } else {
+                drawTools.classList.add('opacity-50', 'pointer-events-none');
+            }
+        });
+
+        document.getElementById('brushSize').addEventListener('input', (e) => {
+            document.getElementById('brushSizeLabel').innerText = `${e.target.value}px`;
+        });
+
+        document.getElementById('clearDrawBtn').addEventListener('click', () => {
+            const slot = slotsData[selectedIndex];
+            slot.drawCtx.clearRect(0, 0, slot.drawCanvas.width, slot.drawCanvas.height);
+            renderMasterCanvas();
+        });
+
+        // 複製樣式至全部
+        document.getElementById('applyAllBtn').addEventListener('click', () => {
+            const current = slotsData[selectedIndex];
+            slotsData.forEach((s, idx) => {
+                if (idx !== selectedIndex) {
+                    s.bgColor = current.bgColor;
+                    s.image = current.image;
+                    s.text = current.text;
+                    s.textColor = current.textColor;
+                    s.textSize = current.textSize;
+                    
+                    // 複製手繪層
+                    s.drawCtx.clearRect(0, 0, s.drawCanvas.width, s.drawCanvas.height);
+                    s.drawCtx.drawImage(current.drawCanvas, 0, 0);
+                }
+            });
+            renderMasterCanvas();
+        });
+
+        // 點擊 Canvas 選擇 AirTag Slot 或進行手繪
+        function getCanvasMousePos(e) {
+            const rect = mainCanvas.getBoundingClientRect();
+            const scaleX = CANVAS_WIDTH / rect.width;
+            const scaleY = CANVAS_HEIGHT / rect.height;
+            return {
+                x: (e.clientX - rect.left) * scaleX,
+                y: (e.clientY - rect.top) * scaleY
+            };
+        }
+
+        mainCanvas.addEventListener('mousedown', (e) => {
+            const pos = getCanvasMousePos(e);
+            const positions = getSlotPositions();
+
+            if (drawModeCheck.checked) {
+                // 手繪模式
+                const currentPos = positions[selectedIndex];
+                const dist = Math.hypot(pos.x - currentPos.x, pos.y - currentPos.y);
+                if (dist <= AIRTAG_RADIUS_PX) {
+                    isDrawing = true;
+                    drawOnSlot(pos, true);
+                }
+            } else {
+                // 點擊選取模式
+                positions.forEach((p, idx) => {
+                    const dist = Math.hypot(pos.x - p.x, pos.y - p.y);
+                    if (dist <= AIRTAG_RADIUS_PX) {
+                        selectedIndex = idx;
+                        updateUIForSelectedSlot();
+                        renderMasterCanvas();
+                    }
+                });
+            }
+        });
+
+        mainCanvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing || !drawModeCheck.checked) return;
+            const pos = getCanvasMousePos(e);
+            drawOnSlot(pos, false);
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDrawing = false;
+            const slot = slotsData[selectedIndex];
+            if (slot) slot.drawCtx.beginPath();
+        });
+
+        function drawOnSlot(pos, isStart) {
+            const positions = getSlotPositions();
+            const currentPos = positions[selectedIndex];
+            const slot = slotsData[selectedIndex];
+
+            // 轉換至該 Slot 的繪圖 Canvas 區域座標 (0, 0 為圓心)
+            const localX = pos.x - currentPos.x + AIRTAG_RADIUS_PX;
+            const localY = pos.y - currentPos.y + AIRTAG_RADIUS_PX;
+
+            const brushColor = document.getElementById('brushColor').value;
+            const brushSize = parseInt(document.getElementById('brushSize').value) * (MM_TO_PX / 8);
+
+            const ctxDraw = slot.drawCtx;
+            ctxDraw.strokeStyle = brushColor;
+            ctxDraw.fillStyle = brushColor;
+            ctxDraw.lineWidth = brushSize;
+            ctxDraw.lineCap = 'round';
+            ctxDraw.lineJoin = 'round';
+
+            if (isStart) {
+                ctxDraw.beginPath();
+                ctxDraw.arc(localX, localY, brushSize / 2, 0, Math.PI * 2);
+                ctxDraw.fill();
+                ctxDraw.beginPath();
+                ctxDraw.moveTo(localX, localY);
+            } else {
+                ctxDraw.lineTo(localX, localY);
+                ctxDraw.stroke();
+            }
+
+            renderMasterCanvas();
+        }
+
+        // 匯出高解析度圖檔 (用於 ibon 列印)
+        document.getElementById('exportBtn').addEventListener('click', () => {
+            // 暫時去除選擇高亮標記
+            const currentSelected = selectedIndex;
+            selectedIndex = -1;
+            renderMasterCanvas();
+
+            // 轉成高畫質 PNG
+            const dataURL = mainCanvas.toDataURL('image/png', 1.0);
+
+            // 還原選擇標記
+            selectedIndex = currentSelected;
+            renderMasterCanvas();
+
+            // 下載
+            const link = document.createElement('a');
+            link.download = `AirTag_ibon貼紙排版_4x6吋.png`;
+            link.href = dataURL;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
+        // Modal 說明對話框控制
+        const guideModal = document.getElementById('guideModal');
+        document.getElementById('openGuideBtn').addEventListener('click', () => guideModal.classList.remove('hidden'));
+        document.getElementById('closeGuideBtn').addEventListener('click', () => guideModal.classList.add('hidden'));
+        document.getElementById('modalOkBtn').addEventListener('click', () => guideModal.classList.add('hidden'));
+
+        // 預設初始化
+        initSlotsData(12);
+    </script>
+</body>
+</html>
+
