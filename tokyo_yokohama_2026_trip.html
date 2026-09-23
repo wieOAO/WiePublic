@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#9ed9e8">
+<title>2026 說走就走東京 🇯🇵</title>
+<style>
+:root{
+  --ice:#a9dfe9; --ice2:#e6f7fa; --deep:#317d8e; --navy:#214b59;
+  --text:#263b42; --muted:#6b8188; --white:#fff; --line:#d8edf1;
+  --shadow:0 10px 30px rgba(42,111,128,.10); --radius:20px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:linear-gradient(180deg,#f5fcfd 0%,#fff 28%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;line-height:1.65}
+a{color:inherit;text-decoration:none}
+.container{width:min(1080px,calc(100% - 28px));margin:auto}
+.hero{padding:38px 0 26px;background:linear-gradient(135deg,#c9eff5,#eefbfd 58%,#fff);border-bottom:1px solid var(--line)}
+.eyebrow{font-size:13px;letter-spacing:.16em;color:var(--deep);font-weight:700}
+h1{font-size:clamp(30px,7vw,52px);line-height:1.15;margin:8px 0 10px;color:var(--navy)}
+.hero p{margin:0;color:var(--muted)}
+.hero-grid{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.badge{background:rgba(255,255,255,.78);border:1px solid rgba(49,125,142,.16);padding:7px 11px;border-radius:999px;font-size:13px}
+.nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-inner{display:flex;gap:8px;overflow-x:auto;padding:10px 0}
+.nav a{background:#f0f8fa;color:var(--deep);padding:9px 14px;border-radius:999px;white-space:nowrap;font-weight:700;display:block}
+.nav a:active,.nav a:focus{background:var(--deep);color:#fff}
+main{padding:26px 0 60px}
+.section{margin:28px 0}
+.section-title{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:14px}
+h2{margin:0;color:var(--navy);font-size:24px}
+h3{margin:0 0 7px;color:var(--navy)}
+.small{font-size:13px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.card.soft{background:var(--ice2)}
+.day{display:none}
+#overview{display:block}
+.day:target{display:block}
+#overview:target{display:block}
+.timeline{position:relative;margin-top:8px}
+.timeline:before{content:"";position:absolute;left:11px;top:10px;bottom:10px;width:2px;background:var(--line)}
+.stop{position:relative;padding-left:36px;margin:0 0 15px}
+.dot{position:absolute;left:5px;top:8px;width:14px;height:14px;border-radius:50%;background:var(--ice);border:3px solid #fff;box-shadow:0 0 0 2px var(--ice)}
+.time{font-size:12px;font-weight:800;color:var(--deep);letter-spacing:.04em}
+.route{display:inline-flex;gap:6px;align-items:center;background:#eef8fa;color:var(--deep);border-radius:10px;padding:5px 8px;font-size:12px;margin-top:6px}
+.route strong{font-weight:800}
+.tip{margin-top:8px;padding:10px 12px;border-left:3px solid var(--ice);background:#f8fcfd;border-radius:0 10px 10px 0;font-size:13px}
+.food{border-left:4px solid var(--ice);padding-left:12px;margin:12px 0}
+.linkbtn{display:inline-block;margin-top:9px;background:var(--deep);color:white;padding:7px 11px;border-radius:10px;font-size:12px;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td,th{padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+th{color:var(--deep);font-weight:800}
+.footer{color:var(--muted);font-size:12px;text-align:center;padding:24px 0}
+.notice{background:#fff8df;border:1px solid #f0e0a7;border-radius:16px;padding:13px 15px;font-size:13px}
+.icon{font-size:22px;margin-right:6px}
+@media(max-width:720px){
+ .container{width:min(100% - 20px,1080px)}
+ .hero{padding:28px 0 22px}
+ .hero-grid{grid-template-columns:1fr}
+ .grid{grid-template-columns:1fr}
+ .card{padding:15px;border-radius:17px}
+ h2{font-size:21px}
+ .section{margin:22px 0}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+ <div class="container hero-grid">
+  <div>
+   <div class="eyebrow">2026 · TOKYO & YOKOHAMA</div>
+   <h1>說走就走東京 🇯🇵</h1>
+   <p>09/27（日）～10/01（四）｜橫濱 2 晚＋東京 2 晚</p>
+   <div class="badges">
+    <span class="badge">🧊 冰川藍旅程</span><span class="badge">🚃 大眾交通為主</span><span class="badge">🌅 江之島夕陽</span><span class="badge">🛍️ 最後採買</span>
+   </div>
+  </div>
+  <div class="card soft"><strong>航班</strong><br>TPE ⇆ NRT｜TR866 / TR867<br>TSA ⇆ HND｜CI220 / CI221</div>
+ </div>
+</header>
+
+<nav class="nav">
+ <div class="container nav-inner">
+  <a href="#overview">總覽</a>
+  <a href="#day1">Day 1</a><a href="#day2">Day 2</a>
+  <a href="#day3">Day 3</a><a href="#day4">Day 4</a><a href="#day5">Day 5</a>
+  <a href="#info">住宿・交通</a><a href="#list">想吃・想買</a>
+ </div>
+</nav>
+
+<main class="container">
+<section id="overview" class="day active">
+ <div class="section">
+  <div class="section-title"><h2>旅程總覽</h2><span class="small">每天點上方分頁查看</span></div>
+  <div class="grid">
+   <div class="card"><h3>09/27｜Day 1</h3><p>成田／羽田 → 橫濱入住<br>中華街 → 山下公園 → 紅磚倉庫</p></div>
+   <div class="card"><h3>09/28｜Day 2</h3><p>鎌倉 → 七里濱 → 江之島<br>岩屋 → 稚兒之淵夕陽 → 海蠟燭</p></div>
+   <div class="card"><h3>09/29｜Day 3</h3><p>橫濱退房 → 築地寄放行李<br>豪德寺 → 麻布台之丘 → 銀座</p></div>
+   <div class="card"><h3>09/30｜Day 4</h3><p>皇居晨跑 → 高輪 Gateway → 銀座採買</p></div>
+   <div class="card"><h3>10/01｜Day 5</h3><p>東京 → 成田 NRT／羽田 HND → 台灣</p></div>
+  </div>
+ </div>
+ <div class="section">
+  <div class="notice">💡 <strong>行程核心：</strong>Day 2 建議把「江之島」當主場，Day 3 集中東京西南側，Day 4 留給高輪＋銀座購物，整體移動以 JR／地鐵／私鐵為主，短距離步行。</div>
+ </div>
+</section>
+
+<section id="day1" class="day">
+ <div class="section-title"><h2>Day 1｜抵達東京 → 橫濱</h2><span class="small">09/27</span></div>
+ <div class="timeline">
+  <div class="stop"><div class="dot"></div><div class="time">抵達</div><h3>成田 NRT／羽田 HND</h3><p>成田：N'EX 約 1h30～1h40 至橫濱；或機場巴士。<br>羽田：京急直達橫濱約 25～30 分。</p><div class="route">🚆 推薦：<strong>羽田→京急｜成田→N'EX</strong></div></div>
+  <div class="stop"><div class="dot"></div><div class="time">CHECK-IN 14:00</div><h3>Hotel JAL City Kannai, Yokohama</h3><p>位於山下町，入住後可直接步行進港區。</p><div class="route">🚶 飯店→中華街：約 5～8 分</div></div>
+  <div class="stop"><div class="dot"></div><div class="time">午後</div><h3>中華街 → 山下公園 → 紅磚倉庫</h3><p>三個區域距離不遠，建議一路步行沿海走，順路拍照。</p><div class="route">🚶 全程步行｜最舒服</div></div>
+  <div class="stop"><div class="dot"></div><div class="time">晚餐</div><h3>橫濱洋食／豬排／家系拉麵</h3><div class="food"><strong>Center Grill</strong>｜日式洋食</div><div class="food"><strong>勝烈庵 本店</strong>｜老字號豬排</div><div class="food"><strong>橫濱家系拉麵</strong>｜想吃濃厚口味可選</div></div>
+ </div>
+</section>
+
+<section id="day2" class="day">
+ <div class="section-title"><h2>Day 2｜鎌倉・七里濱・江之島</h2><span class="small">09/28｜🌅 日落主場</span></div>
+ <div class="notice">🗻 若想看富士山，建議把「七里濱」提前；海邊能見度通常受天候影響，保留彈性。</div>
+ <div class="timeline">
+  <div class="stop"><div class="dot"></div><div class="time">08:00～09:00</div><h3>關內 → 鎌倉</h3><p>JR 根岸線到大船，再接 JR 橫須賀線至鎌倉；或關內→橫濱→鎌倉。</p><div class="route">🚆 推薦：<strong>JR 關內→大船→鎌倉</strong></div></div>
+  <div class="stop"><div class="dot"></div><div class="time">上午</div><h3>鶴岡八幡宮 → 小町通</h3><p>從鎌倉站步行即可串聯，早餐可選 COBAKABA／Régalez-Vous。</p><div class="route">🚶 鎌倉站→小町通→八幡宮：約 15～25 分</div></div>
+  <div class="stop"><div class="dot"></div><div class="time">中午～下午</div><h3>七里濱（可選）</h3><p>搭江之電往藤澤方向，在七里ヶ浜下車。適合看海、吃早午餐與等富士山。</p><div class="route">🚋 鎌倉→七里ヶ浜｜江之電</div></div>
+  <div class="stop"><div class="dot"></div><div class="time">最晚 14:00 抵達</div><h3>江之島</h3><p>江之電江之島站 → 江之島大橋 → 弁財天仲見世通 → 江島神社 → 山頂。</p><div class="route">🚋 七里ヶ浜→江之島｜江之電</div></div>
+  <div class="stop"><div class="dot"></div><div class="time">16:30 前</div><h3>江之島岩屋</h3><p>岩屋最後入場約 16:30；建議先處理岩屋，再慢慢往稚兒之淵。</p><div class="route">🚶 山頂區→岩屋｜下坡步行</div></div>
+  <div class="stop"><div class="dot"></div><div class="time">約 17:30</div><h3>稚兒之淵 🌅</h3><p>以夕陽為目標。日落時間會隨日期與天候變化，現場提早卡位較安心。</p></div>
+  <div class="stop"><div class="dot"></div><div class="time">晚間</div><h3>江之島海蠟燭 → 回橫濱</h3><p>看完夜景後可由江之島站／湘南江之島站離開，再接藤澤／大船往橫濱。</p><div class="route">🚋 江之島→藤澤→JR 橫濱｜或湘南單軌→大船</div></div>
+ </div>
+</section>
+
+<section id="day3" class="day">
+ <div class="section-title"><h2>Day 3｜橫濱 → 豪德寺 → 麻布台 → 銀座</h2><span class="small">09/29</span></div>
+ <div class="timeline">
+  <div class="stop"><div class="dot"></div><div class="time">上午</div><h3>橫濱早餐 → 退房</h3><p>可選飯店早餐、關內附近麥當勞，或橫濱紅磚倉庫 bills。</p></div>
+  <div class="stop"><div class="dot"></div><div class="time">約 10:00</div><h3>前往東急 STAY 築地</h3><p>建議先到飯店寄放行李，再開始東京行程。</p><div class="route">🚆 推薦：<strong>關內→橫濱→東銀座，再步行至築地</strong></div></div>
+  <div class="stop"><div class="dot"></div><div class="time">中午～下午</div><h3>豪德寺 🐈</h3><p>招財貓寺院。可搭東急世田谷線前往，沿線也能體驗特色電車。</p><div class="route">🚆 築地／東銀座→三軒茶屋方向→世田谷線→宮の坂</div></div>
+  <div class="stop"><div class="dot"></div><div class="time">下午</div><h3>麻布台之丘・森 JP Tower</h3><p>以當日開放狀況為準；Sky Room Cafe & Bar 等方案可能涉及消費／入場條件。</p><div class="route">🚇 豪德寺→麻布台｜地鐵轉乘約 45～60 分</div><div class="tip">⚠️ 出發前確認當月包場、展望空間營業及入場規則。</div></div>
+  <div class="stop"><div class="dot"></div><div class="time">晚上</div><h3>回築地 Check-in → 銀座</h3><p>若還有體力，可把銀座逛街與晚餐安排在入住後。</p><div class="route">🚶 築地→銀座｜步行約 10～15 分</div></div>
+ </div>
+</section>
+
+<section id="day4" class="day">
+ <div class="section-title"><h2>Day 4｜皇居晨跑 → 高輪 Gateway → 銀座</h2><span class="small">09/30</span></div>
+ <div class="timeline">
+  <div class="stop"><div class="dot"></div><div class="time">05:00～06:00</div><h3>皇居晨跑</h3><p>從櫻田門附近進入路線；依你的筆記採逆時針。早晨人車較少，但仍以現場交通與跑者規範為準。</p><div class="route">🚶 築地→皇居櫻田門｜約 30 分</div></div>
+  <div class="stop"><div class="dot"></div><div class="time">上午</div><h3>高輪 Gateway City</h3><p>重點：NEWoMan、高輪 Gateway 站體、LUFTBAUM 空中花園、MoN 等。</p><div class="route">🚆 推薦：<strong>築地→東銀座→泉岳寺／高輪 Gateway</strong></div></div>
+  <div class="stop"><div class="dot"></div><div class="time">中午～下午</div><h3>Salomon／HOKA／NEWoMan</h3><p>把運動品牌採買集中處理；Salomon 目標高輪 NEWoMan 4F。</p></div>
+  <div class="stop"><div class="dot"></div><div class="time">下午～晚上</div><h3>銀座最後採買 ✨</h3><p>MUJI、Workman Colors、mont-bell 東京京橋店，以及你想吃的烏龍麵／咖啡。</p><div class="route">🚇 高輪 Gateway→銀座｜JR 山手線或地鐵轉乘</div></div>
+ </div>
+</section>
+
+<section id="day5" class="day">
+ <div class="section-title"><h2>Day 5｜東京 → 機場</h2><span class="small">10/01</span></div>
+ <div class="grid">
+  <div class="card"><h3>✈️ TR867｜成田 NRT 12:30</h3><p>你筆記的選項：東銀座站搭淺草線，部分班次可直達／少轉乘前往成田方向。</p><div class="route">🚇 建議：東銀座→成田方向直通車（依當日班次）</div><div class="tip">若要搭 12:30 航班，建議預留足夠的機場報到、安檢與航廈移動時間。</div></div>
+  <div class="card"><h3>✈️ CI221｜羽田 HND 14:30</h3><p>東銀座→羽田可利用都營淺草線／京急直通班次。</p><div class="route">🚇 東銀座→羽田｜直通班次最省事</div><div class="tip">你的筆記列出 10:41～11:53 抵達羽田的幾個候選班次，可在出發前再依官方即時時刻表確認。</div></div>
+ </div>
+</section>
+
+<section id="info" class="day">
+ <div class="section-title"><h2>住宿・航班・交通</h2></div>
+ <div class="grid">
+  <div class="card"><h3>🏨 橫濱｜09/27～09/29</h3><p><strong>Hotel JAL City Kannai, Yokohama</strong><br>神奈川縣橫濱市中區山下町72<br>Booking：¥5,190／總計</p><div class="route">📍 中華街、山下公園、紅磚倉庫都方便步行</div></div>
+  <div class="card"><h3>🏨 東京｜09/29～10/01</h3><p><strong>東急STAY築地</strong><br>Rakuten：¥11,596／總計</p><div class="route">📍 築地／東銀座生活圈｜銀座步行可達</div></div>
+ </div>
+ <div class="section">
+  <div class="card"><h3>✈️ 航班</h3><table>
+   <tr><th>航段</th><th>去程</th><th>回程</th></tr>
+   <tr><td>桃園 TPE ⇆ 成田 NRT</td><td>TR866</td><td>TR867｜12:30</td></tr>
+   <tr><td>松山 TSA ⇆ 羽田 HND</td><td>CI220</td><td>CI221｜14:30</td></tr>
+  </table></div>
+ </div>
+ <div class="section">
+  <div class="card"><h3>🚆 成田 → 橫濱｜交通選擇</h3><table>
+   <tr><th>方式</th><th>約時</th><th>特色</th></tr>
+   <tr><td>N'EX 成田特快</td><td>約 1h30～1h40</td><td>直達、行李較輕鬆</td></tr>
+   <tr><td>機場巴士</td><td>約 1h50～2h</td><td>不用搬行李轉車</td></tr>
+   <tr><td>Skyliner＋JR</td><td>約 1h35</td><td>轉乘 1 次</td></tr>
+   <tr><td>京成＋都營淺草線</td><td>約 2h</td><td>票價較省、時間較長</td></tr>
+  </table></div>
+ </div>
+</section>
+
+<section id="list" class="day">
+ <div class="section-title"><h2>想吃・想買清單</h2></div>
+ <div class="grid">
+  <div class="card"><h3>🍜 想吃</h3>
+   <div class="food"><strong>五代目 花山烏冬 銀座</strong><br><span class="small">飯店附近，可安排 Day 3/4</span></div>
+   <div class="food"><strong>銀座 佐藤養助</strong></div>
+   <div class="food"><strong>Tully's Coffee</strong>｜皇家奶茶</div>
+   <div class="food"><strong>7-Eleven</strong>｜自製抹茶牛奶、現泡本格紅茶</div>
+   <div class="food"><strong>Center Grill／勝烈庵</strong>｜橫濱洋食／豬排</div>
+   <div class="food"><strong>魚見亭</strong>｜江之島海景</div>
+  </div>
+  <div class="card"><h3>🛍️ 想買</h3>
+   <div class="food"><strong>mont-bell 東京京橋店</strong></div>
+   <div class="food"><strong>Salomon</strong>｜高輪 NEWoMan 4F</div>
+   <div class="food"><strong>MUJI</strong>｜銀座採買</div>
+   <div class="food"><strong>Workman Colors</strong></div>
+   <div class="food"><strong>崎陽軒</strong>｜橫濱伴手禮</div>
+   <div class="food"><strong>Huffnagel</strong>｜紅磚倉庫奶油夾心餅乾</div>
+  </div>
+ </div>
+</section>
+
+<div class="footer">🧊 2026 說走就走東京｜行程筆記版<br>交通時間與營業資訊請以出發當日官方公告／即時班次為準。</div>
+</main>
+
+
+</body>
+</html>
